@@ -50,7 +50,7 @@ async function uploadFile() {
 async function listFiles() {
     try {
         const response = await drive.files.list({
-            pageSize: 100,
+            pageSize: 10,
             fields: "nextPageToken, files(id, name)",
         });
 
@@ -60,13 +60,13 @@ async function listFiles() {
     }
 }
 
-// listFiles();
+listFiles();
 
 // get the history of a file
 async function getFileHistory() {
     try {
         const response = await drive.revisions.list({
-            fileId: "172TO6fi0_zeyaUfEXQTssZykseCmQkMY",
+            fileId: "1pZUQv0C43jUBBEiqt-TwkDQa9h5XQ5own_ytIVeTaJk",
         });
 
         console.log(response.data.revisions);
@@ -123,9 +123,10 @@ async function watchFile() {
         const response = await drive.files.watch({
             fileId,
             requestBody: {
-                id: "channel2",
+                id: "channel3",
                 type: "web_hook",
-                address: "https://new-dayzero.vercel.app/home",
+                address:
+                    "https://aedc-205-254-171-114.ngrok-free.app/webhook-endpoint",
             },
         });
 
@@ -136,3 +137,34 @@ async function watchFile() {
 }
 
 // watchFile();
+
+// stop listening to changes in a file
+async function stopWatchingFile() {
+    try {
+        const fileId = "1pZUQv0C43jUBBEiqt-TwkDQa9h5XQ5own_ytIVeTaJk";
+        const channelId = "channel3";
+        const response = await drive.channels.stop({
+            requestBody: {
+                id: channelId,
+                resourceId: "LzKlwis7M81hp0mhiyUkiCN3TEk",
+            },
+        });
+
+        console.log(response.data);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// stopWatchingFile();
+
+/* 
+response: 
+{
+  kind: 'api#channel',
+  id: 'channel1',
+  resourceId: 'LzKlwis7M81hp0mhiyUkiCN3TEk',
+  resourceUri: 'https://www.googleapis.com/drive/v3/files/1pZUQv0C43jUBBEiqt-TwkDQa9h5XQ5own_ytIVeTaJk?alt=json&null',
+  expiration: '1703570041000'
+}
+ */
